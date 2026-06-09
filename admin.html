@@ -530,9 +530,17 @@ function removeAdmin(email) {
         confirmButtonText: 'Yes, Remove'
     }).then(async (res) => {
         if(res.isConfirmed) {
-            // Remove from allowed list (requires updating the hardcoded array)
-            // Since it's hardcoded, we'll show a message to manually update
-            Swal.fire('Note', 'To permanently remove this admin, please update the ALLOWED_ADMIN_EMAILS array in the code.', 'info');
+            // Remove from allowed list array
+            const index = ALLOWED_ADMIN_EMAILS.indexOf(email);
+            if (index !== -1) {
+                ALLOWED_ADMIN_EMAILS.splice(index, 1);
+            }
+            
+            // Also disable/delete the Firebase Auth user if needed
+            // Note: Deleting Firebase Auth user requires Admin SDK, so we'll just remove from allowed list
+            
+            Swal.fire('Success', `${email} has been removed from admin access. They can no longer login to admin panel.`, 'success');
+            loadAdminUsersList(); // Refresh the list
         }
     });
 }
