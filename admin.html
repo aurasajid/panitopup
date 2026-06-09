@@ -41,7 +41,8 @@
             <i class="fas fa-user-lock text-3xl text-pink-500"></i>
         </div>
         <h2 class="text-2xl font-bold text-gray-800 mb-1">Admin Access</h2>
-        <form onsubmit="event.preventDefault(); adminLogin();" class="space-y-4 mt-8">
+        <p class="text-xs text-gray-400 mb-4">Default: admin@dreamtopup.com / Admin@123</p>
+        <form onsubmit="event.preventDefault(); adminLogin();" class="space-y-4 mt-4">
             <input type="email" id="admin-email" placeholder="Email Address" class="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-500">
             <input type="password" id="admin-pass" placeholder="Password" class="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-500">
             <button type="submit" class="w-full bg-pink-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-pink-200 hover:bg-pink-700 transition-all">LOGIN</button>
@@ -56,7 +57,14 @@
             <h1 class="font-bold text-lg text-gray-800">Admin<span class="text-pink-500">Panel</span></h1>
             <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Control Center</p>
         </div>
-        <button onclick="logout()" class="w-9 h-9 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"><i class="fas fa-power-off text-sm"></i></button>
+        <div class="flex gap-2">
+            <button onclick="showAdminSettings()" class="w-9 h-9 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center hover:bg-purple-500 hover:text-white transition-colors">
+                <i class="fas fa-user-shield text-sm"></i>
+            </button>
+            <button onclick="logout()" class="w-9 h-9 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors">
+                <i class="fas fa-power-off text-sm"></i>
+            </button>
+        </div>
     </header>
 
     <main class="p-4 space-y-4">
@@ -250,6 +258,71 @@
                 <button onclick="saveConfig()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md mt-4">Save All Config</button>
             </div>
         </div>
+
+        <!-- 8. ADMIN MANAGEMENT SECTION (NEW) -->
+        <div id="view-admin-settings" class="hidden fade-in space-y-4 pb-24">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-800 mb-4"><i class="fas fa-user-cog text-pink-500 mr-2"></i>Admin Profile</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 ml-1">Current Email</label>
+                        <input type="email" id="admin-current-email" readonly class="w-full bg-gray-100 border border-gray-200 p-2.5 rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 ml-1">New Email</label>
+                        <input type="email" id="admin-new-email" placeholder="Enter new email" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-lg text-sm">
+                    </div>
+                    <button onclick="changeAdminEmail()" class="w-full bg-purple-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-purple-700 transition">
+                        <i class="fas fa-envelope mr-2"></i> Change Email
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-800 mb-4"><i class="fas fa-key text-pink-500 mr-2"></i>Change Password</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 ml-1">Current Password</label>
+                        <input type="password" id="admin-current-pass" placeholder="Enter current password" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 ml-1">New Password</label>
+                        <input type="password" id="admin-new-pass" placeholder="Enter new password (min 6 chars)" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 ml-1">Confirm Password</label>
+                        <input type="password" id="admin-confirm-pass" placeholder="Confirm new password" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-lg text-sm">
+                    </div>
+                    <button onclick="changeAdminPassword()" class="w-full bg-orange-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-orange-700 transition">
+                        <i class="fas fa-key mr-2"></i> Change Password
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-800 mb-4"><i class="fas fa-user-plus text-pink-500 mr-2"></i>Create New Admin Account</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 ml-1">Admin Email</label>
+                        <input type="email" id="new-admin-email" placeholder="admin2@example.com" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 ml-1">Admin Password</label>
+                        <input type="password" id="new-admin-password" placeholder="Password (min 6 chars)" class="w-full bg-gray-50 border border-gray-200 p-2.5 rounded-lg text-sm">
+                    </div>
+                    <button onclick="createNewAdmin()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-green-700 transition">
+                        <i class="fas fa-user-plus mr-2"></i> Create Admin Account
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-800 mb-4"><i class="fas fa-users text-pink-500 mr-2"></i>All Admin Accounts</h3>
+                <div id="admin-users-list" class="space-y-2 max-h-64 overflow-y-auto">
+                    <!-- Admin list will appear here -->
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- USER DETAILS MODAL -->
@@ -293,7 +366,7 @@
 
 <script>
 // ============================================
-// FIREBASE CONFIGURATION - CREDENTIALS ADDED
+// FIREBASE CONFIGURATION
 // ============================================
 const firebaseConfig = {
     apiKey: "AIzaSyBxAXnqcD_RIDffjVvjjNccVUhf6C3FC7A",
@@ -313,12 +386,32 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 // ============================================
-// ADMIN LOGIN
+// HARDCODED ADMIN CREDENTIALS
+// ============================================
+const ALLOWED_ADMIN_EMAILS = [
+    "admin@dreamtopup.com",
+    "admin2@dreamtopup.com"
+];
+
+// Default admin credentials (for first time use)
+const DEFAULT_ADMIN_EMAIL = "admin@dreamtopup.com";
+const DEFAULT_ADMIN_PASSWORD = "Admin@123";
+
+// ============================================
+// ADMIN LOGIN WITH HARDCODED CHECK
 // ============================================
 function adminLogin() {
     const email = document.getElementById('admin-email').value;
     const pass = document.getElementById('admin-pass').value;
-    if(!email || !pass) return Swal.fire('Error', 'Empty Credentials', 'warning');
+    
+    if(!email || !pass) {
+        return Swal.fire('Error', 'Empty Credentials', 'warning');
+    }
+    
+    // Check if email is in allowed admin list
+    if(!ALLOWED_ADMIN_EMAILS.includes(email)) {
+        return Swal.fire('Access Denied', 'You are not authorized to access this panel.', 'error');
+    }
     
     Swal.fire({
         title: 'Logging in...',
@@ -332,19 +425,59 @@ function adminLogin() {
         })
         .catch(err => {
             Swal.close();
-            Swal.fire('Login Failed', err.message, 'error');
+            // If login fails and it's the default admin, try to create it
+            if(email === DEFAULT_ADMIN_EMAIL) {
+                createDefaultAdminAccount();
+            } else {
+                Swal.fire('Login Failed', err.message, 'error');
+            }
         });
 }
 
-// Auth State Listener
+// Create default admin account if it doesn't exist
+async function createDefaultAdminAccount() {
+    Swal.fire({
+        title: 'Setting up admin account...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+    
+    try {
+        const userCred = await auth.createUserWithEmailAndPassword(DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD);
+        await db.collection('users').doc(userCred.user.uid).set({
+            email: DEFAULT_ADMIN_EMAIL,
+            name: "Super Admin",
+            balance: 0,
+            role: "admin",
+            createdAt: new Date()
+        });
+        Swal.fire('Success', 'Admin account created! Please login again.', 'success');
+    } catch(err) {
+        Swal.close();
+        Swal.fire('Error', 'Could not create admin account: ' + err.message, 'error');
+    }
+}
+
+// Auth State Listener with Admin Email Check
 auth.onAuthStateChanged(user => {
-    if(user) { 
-        document.getElementById('login-sec').classList.add('hidden'); 
-        document.getElementById('admin-panel').classList.remove('hidden'); 
-        loadAllData(); 
-    } else { 
-        document.getElementById('login-sec').classList.remove('hidden'); 
-        document.getElementById('admin-panel').classList.add('hidden'); 
+    if(user) {
+        // Check if email is in allowed admin list
+        if(!ALLOWED_ADMIN_EMAILS.includes(user.email)) {
+            auth.signOut().then(() => {
+                document.getElementById('login-sec').classList.remove('hidden');
+                document.getElementById('admin-panel').classList.add('hidden');
+                Swal.fire('Access Denied', 'You are not authorized to access the admin panel.', 'error');
+            });
+            return;
+        }
+        document.getElementById('login-sec').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+        document.getElementById('admin-current-email').value = user.email;
+        loadAllData();
+        loadAdminUsersList();
+    } else {
+        document.getElementById('login-sec').classList.remove('hidden');
+        document.getElementById('admin-panel').classList.add('hidden');
     }
 });
 
@@ -355,11 +488,194 @@ function logout() {
 }
 
 // ============================================
-// NAVIGATION
+// ADMIN MANAGEMENT FUNCTIONS
+// ============================================
+
+function showAdminSettings() {
+    nav('admin-settings');
+    loadAdminUsersList();
+}
+
+function loadAdminUsersList() {
+    const listContainer = document.getElementById('admin-users-list');
+    if(!listContainer) return;
+    
+    listContainer.innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Loading admins...</div>';
+    
+    // Get all users from Firebase Auth (requires admin SDK, so we use Firestore approach)
+    // Instead, we'll just show the hardcoded list
+    let html = '';
+    ALLOWED_ADMIN_EMAILS.forEach(email => {
+        const isCurrent = (email === auth.currentUser?.email);
+        html += `
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                <div>
+                    <p class="text-sm font-bold text-gray-800">${email}</p>
+                    ${isCurrent ? '<span class="text-[10px] text-green-600">(Current)</span>' : ''}
+                </div>
+                ${!isCurrent ? `<button onclick="removeAdmin('${email}')" class="text-red-500 text-xs px-2 py-1 rounded hover:bg-red-50"><i class="fas fa-trash"></i> Remove</button>` : ''}
+            </div>
+        `;
+    });
+    listContainer.innerHTML = html;
+}
+
+function removeAdmin(email) {
+    Swal.fire({
+        title: 'Remove Admin?',
+        text: `Remove ${email} from admin access?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Yes, Remove'
+    }).then(async (res) => {
+        if(res.isConfirmed) {
+            // Remove from allowed list (requires updating the hardcoded array)
+            // Since it's hardcoded, we'll show a message to manually update
+            Swal.fire('Note', 'To permanently remove this admin, please update the ALLOWED_ADMIN_EMAILS array in the code.', 'info');
+        }
+    });
+}
+
+async function changeAdminEmail() {
+    const newEmail = document.getElementById('admin-new-email').value;
+    const user = auth.currentUser;
+    
+    if(!newEmail) {
+        return Swal.fire('Error', 'Please enter a new email', 'warning');
+    }
+    
+    if(!ALLOWED_ADMIN_EMAILS.includes(user.email)) {
+        return Swal.fire('Error', 'You cannot change email for this account', 'error');
+    }
+    
+    Swal.fire({
+        title: 'Change Email?',
+        text: `Update email from ${user.email} to ${newEmail}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f59e0b',
+        confirmButtonText: 'Yes, Update'
+    }).then(async (res) => {
+        if(res.isConfirmed) {
+            Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            try {
+                await user.updateEmail(newEmail);
+                // Update the allowed list index
+                const index = ALLOWED_ADMIN_EMAILS.indexOf(user.email);
+                if(index !== -1) {
+                    ALLOWED_ADMIN_EMAILS[index] = newEmail;
+                }
+                await db.collection('users').doc(user.uid).update({ email: newEmail });
+                Swal.fire('Success', `Email updated to ${newEmail}. Please login again.`, 'success');
+                setTimeout(() => logout(), 2000);
+            } catch(err) {
+                Swal.fire('Error', err.message, 'error');
+            }
+        }
+    });
+}
+
+async function changeAdminPassword() {
+    const currentPass = document.getElementById('admin-current-pass').value;
+    const newPass = document.getElementById('admin-new-pass').value;
+    const confirmPass = document.getElementById('admin-confirm-pass').value;
+    const user = auth.currentUser;
+    
+    if(!currentPass || !newPass || !confirmPass) {
+        return Swal.fire('Error', 'Please fill all password fields', 'warning');
+    }
+    
+    if(newPass.length < 6) {
+        return Swal.fire('Error', 'New password must be at least 6 characters', 'warning');
+    }
+    
+    if(newPass !== confirmPass) {
+        return Swal.fire('Error', 'New passwords do not match', 'warning');
+    }
+    
+    Swal.fire({
+        title: 'Change Password?',
+        text: 'You will need to login again after changing password.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f59e0b',
+        confirmButtonText: 'Yes, Change'
+    }).then(async (res) => {
+        if(res.isConfirmed) {
+            Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            try {
+                // Re-authenticate user first
+                const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPass);
+                await user.reauthenticateWithCredential(credential);
+                await user.updatePassword(newPass);
+                Swal.fire('Success', 'Password changed successfully! Please login again.', 'success');
+                setTimeout(() => logout(), 2000);
+            } catch(err) {
+                Swal.fire('Error', err.message, 'error');
+            }
+        }
+    });
+}
+
+async function createNewAdmin() {
+    const email = document.getElementById('new-admin-email').value;
+    const password = document.getElementById('new-admin-password').value;
+    
+    if(!email || !password) {
+        return Swal.fire('Error', 'Please fill both email and password', 'warning');
+    }
+    
+    if(password.length < 6) {
+        return Swal.fire('Error', 'Password must be at least 6 characters', 'warning');
+    }
+    
+    if(ALLOWED_ADMIN_EMAILS.includes(email)) {
+        return Swal.fire('Error', 'This email is already an admin', 'warning');
+    }
+    
+    Swal.fire({
+        title: 'Create Admin?',
+        text: `Create admin account for ${email}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#22c55e',
+        confirmButtonText: 'Yes, Create'
+    }).then(async (res) => {
+        if(res.isConfirmed) {
+            Swal.fire({ title: 'Creating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            try {
+                // Create Firebase Auth user
+                const userCred = await auth.createUserWithEmailAndPassword(email, password);
+                await db.collection('users').doc(userCred.user.uid).set({
+                    email: email,
+                    name: "Admin User",
+                    balance: 0,
+                    role: "admin",
+                    createdAt: new Date()
+                });
+                
+                // Add to allowed list
+                ALLOWED_ADMIN_EMAILS.push(email);
+                
+                document.getElementById('new-admin-email').value = '';
+                document.getElementById('new-admin-password').value = '';
+                
+                Swal.fire('Success', `Admin account created for ${email}`, 'success');
+                loadAdminUsersList();
+            } catch(err) {
+                Swal.fire('Error', err.message, 'error');
+            }
+        }
+    });
+}
+
+// ============================================
+// NAVIGATION (Updated to include admin-settings)
 // ============================================
 function nav(tabName) {
     if(tabName !== 'games') closeProductManager();
-    const views = ['deposits', 'user-orders', 'users', 'games', 'banners', 'tutorials', 'settings', 'categories'];
+    const views = ['deposits', 'user-orders', 'users', 'games', 'banners', 'tutorials', 'settings', 'categories', 'admin-settings'];
     views.forEach(t => {
         const viewEl = document.getElementById('view-' + t);
         if(viewEl) viewEl.classList.add('hidden');
@@ -371,11 +687,10 @@ function nav(tabName) {
     });
     const activeView = document.getElementById('view-' + tabName);
     if(activeView) activeView.classList.remove('hidden');
-    const activeBtn = document.getElementById('btn-' + tabName);
-    if(activeBtn) {
-        activeBtn.classList.add('nav-active', 'text-pink-600');
-        activeBtn.classList.remove('text-gray-400');
-        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    
+    if(tabName === 'admin-settings') {
+        document.getElementById('admin-current-email').value = auth.currentUser?.email || '';
+        loadAdminUsersList();
     }
 }
 
