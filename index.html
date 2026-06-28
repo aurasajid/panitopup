@@ -642,6 +642,15 @@
                         <div id="deposit-history-list" class="space-y-3"></div>
                     </div>
                 </div>
+
+                <!-- ===== ZAMM PAY BUTTON ADDED HERE ===== -->
+                <div class="mt-6">
+                    <button onclick="initiateZammPayPayment()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-green-700 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-credit-card"></i> Pay with ZAMM Pay
+                    </button>
+                </div>
+                <!-- ===== END ZAMM PAY BUTTON ===== -->
+
             </section>
 
             <!-- TUTORIAL SECTION -->
@@ -819,6 +828,13 @@ let authReady = false;
 
 // Admin emails to block
 const BLOCKED_ADMIN_EMAILS = ["admin@dreamtopup.com", "admin2@dreamtopup.com"];
+
+// ============================================
+// ZAMM PAY CONFIGURATION
+// ============================================
+const ZAMM_API_KEY = 'b84cf17496f170a2';
+const ZAMM_API_URL = 'https://pay.zammbd.com/api/payment/create';
+const ZAMM_VERIFY_URL = 'https://pay.zammbd.com/api/payment/verify';
 
 // ============================================
 // DARK MODE FUNCTIONS
@@ -1930,6 +1946,67 @@ async function verifyAutoPayment() {
             Swal.fire('Failed', 'Error adding balance. Contact support.', 'error');
         }
     });
+}
+
+// ============================================
+// ZAMM PAY INTEGRATION
+// ============================================
+async function initiateZammPayPayment() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+
+    const amount = document.getElementById('dep-amount').value;
+    if (!amount || amount < 10) {
+        return Swal.fire('Error', 'Please enter a valid amount (Min 10 Tk)', 'error');
+    }
+
+    // Get user details
+    const userEmail = currentUser.email || 'customer@example.com';
+    const userName = currentUser.displayName || 'Customer';
+    const userPhone = document.getElementById('modal-reg-phone')?.value || '01700000000';
+
+    // Your website domain for redirects
+    const baseUrl = window.location.origin;
+    const successUrl = `${baseUrl}/payment-success.html`;
+    const cancelUrl = `${baseUrl}/payment-cancel.html`;
+    const callbackUrl = `${baseUrl}/payment-callback.html`;
+
+    showLoading();
+
+    try {
+        const response = await fetch(ZAMM_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                api_key: ZAMM_API_KEY,
+                cus_name: userName,
+                cus_email: userEmail,
+                cus_number: userPhone,
+                success_url: successUrl,
+                cancel_url: cancelUrl,
+                callback_url: callbackUrl,
+                amount: parseInt(amount)
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.payment_url) {
+            // Redirect to ZAMM Pay payment page
+            window.location.href = data.payment_url;
+        } else {
+            hideLoading();
+            Swal.fire('Error', data.message || 'Payment initiation failed. Please try again.', 'error');
+        }
+    } catch (error) {
+        hideLoading();
+        console.error('ZAMM Pay Error:', error);
+        Swal.fire('Error', 'Network error. Please try again.', 'error');
+    }
 }
 
 function toggleFabMenu() {
