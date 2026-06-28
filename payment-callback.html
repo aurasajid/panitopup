@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing...</title>
+</head>
+<body>
+    <h1>Payment Processing...</h1>
+    <script>
+        // Get transaction data from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const trxId = urlParams.get('trx_id');
+        const status = urlParams.get('status');
+        
+        if (status === 'success' && trxId) {
+            // Redirect to success page with transaction ID
+            window.location.href = `payment-success.html?trx_id=${trxId}`;
+        } else {
+            window.location.href = 'payment-cancel.html';
+        }
+    </script>
+</body>
+</html>
